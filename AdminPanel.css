@@ -1,0 +1,119 @@
+body {
+    background: linear-gradient(135deg, #e9f0ff, #f8fafc);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #212529;
+}
+
+.navbar {
+    background-color: #000;
+    padding: 0.75rem 1rem;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+.nav-link:hover {
+    color: #007bff !important;
+}
+
+.sidebar {
+    background-color: #fff;
+    border-right: 1px solid #dee2e6;
+    height: 199vh;
+}
+
+.nav-link {
+    color: #212529;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #212529;
+    transition: all 0.3s;
+}
+
+.table {
+    background-color: #fff;
+}
+
+.order-filter {
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-outline-primary, .btn-outline-success, .btn-outline-warning, .btn-outline-danger {
+    border-radius: 5px;
+}
+
+.status-delivered {
+    color: #28a745;
+}
+
+.status-processing {
+    color: #ffc107;
+}
+
+.status-cancelled {
+    color: #dc3545;
+}
+
+.animate__fadeIn {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+
+
+
+.product-link {
+  color: #000000;
+  text-decoration: none;
+}
+.product-link:hover {
+  text-decoration: underline;
+}
+.status-delivered { color: green; }
+.status-processing { color: orange; }
+.status-cancelled { color: red; }
+
+#orders-table td {
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table-responsive {
+  overflow-x: auto;
+}

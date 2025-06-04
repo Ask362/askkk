@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seller Dashboard | Alem Market</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" href="/img/market-stand-icon-1.png" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/market-stand-icon-1.png">
+  <meta name="description" content="Manage your products and orders on Alem Market. Create, edit, and track sales as a seller.">
+  <meta name="keywords" content="Alem Market, seller dashboard, product management, order tracking">
+  <link rel="stylesheet" href="/css/Product-Page.css" />
+  <style>
+    /* Modern Section Styling */
+    .main-content {
+      padding: 2.5rem;
+      background: #f8f9fa;
+      min-height: calc(100vh - 200px);
+    }
+    .section {
+      margin-bottom: 2.5rem;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      transition: transform 0.3s ease;
+    }
+    .section h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #212529;
+      background: linear-gradient(90deg, #000, #000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: #000;
+      border-radius: 2px;
+    }
+
+    /* Dashboard Overview */
+    .dashboard-overview .overview-card {
+      border: none;
+      border-radius: 12px;
+      background: #ffffff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    .dashboard-overview .overview-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    .dashboard-overview .overview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #000, #000);
+    }
+    .dashboard-overview .overview-card h3 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dashboard-overview .overview-card p {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #212529;
+      margin: 0;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .controls .form-floating {
+      position: relative;
+      min-width: 200px;
+    }
+    .controls input.form-control,
+    .controls select.form-select {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 0.75rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .controls input.form-control:focus,
+    .controls select.form-select:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+    .controls button.btn {
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .controls button.btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Product and Order Cards */
+    .product-list .product-card,
+    .order-list .order-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .product-list .product-card:hover,
+    .order-list .order-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    .product-card .card,
+    .order-card .card {
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .product-card .card-img-top {
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 1px solid #e9ecef;
+    }
+    .product-card .card-body,
+    .order-card .card-body {
+      padding: 1.5rem;
+    }
+    .product-card .card-title,
+    .order-card .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 0.75rem;
+    }
+    .product-card .card-text,
+    .order-card .card-text {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+    }
+    .product-card .actions button,
+    .order-card .actions button {
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+
+    /* Modal */
+    .modal-content {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      animation: scaleIn 0.3s ease;
+    }
+    .modal-header {
+      border-bottom: none;
+      padding: 1.5rem 2rem;
+    }
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #212529;
+    }
+    .modal-body {
+      padding: 1.5rem 2rem;
+    }
+    .modal-body .form-label {
+      font-weight: 500;
+      color: #495057;
+    }
+    .modal-body .form-control,
+    .modal-body .form-select {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 0.75rem;
+    }
+    .modal-body .form-control:focus,
+    .modal-body .form-select:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+    .modal-body .btn-primary {
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Toast */
+    .toast-container .toast {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      min-width: 300px;
+    }
+    .toast-container .toast .toast-body {
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toast-container .toast .toast-body::before {
+      content: '\f058';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      color: #28a745;
+    }
+    .toast-container .toast.bg-danger .toast-body::before {
+      content: '\f06a';
+      color: #dc3545;
+    }
+
+    /* Animations */
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 1.5rem;
+      }
+      .section {
+        padding: 1.5rem;
+      }
+      .dashboard-overview .overview-card p {
+        font-size: 1.5rem;
+      }
+      .product-card .card-img-top {
+        height: 150px;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .controls .form-floating {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <button class="btn btn-outline-secondary btn-sm mx-1 text-white"><i class="fas fa-map-marker-alt"></i> Kazakhstan</button>
+      <button class="btn btn-outline-secondary btn-sm mx-1 text-white"><i class="fas fa-store"></i> Address</button>
+      <button class="btn btn-outline-secondary btn-sm mx-1 text-white" onclick="window.location.href='Contact-Page.html';"><i class="fas fa-headset"></i> Support: 5050 (9:00 to 22:00 daily)</button>
+      <button class="btn btn-outline-secondary btn-sm mx-1 text-white">KZT</button>
+      <button class="btn btn-outline-secondary btn-sm mx-1 text-white">KZ | ENG | RUS</button>
+    </div>
+    <div class="main-header">
+      <div class="logo">
+        <h1><a href="Home-Page.html" style="color: black; text-decoration: none;">Alem Market</a></h1>
+      </div>
+      <div class="search-bar">
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Find something..." aria-label="Search products">
+          <i class="fas fa-search search-icon"></i>
+        </div>
+      </div>
+      <div class="user-actions">
+        <a href="favorites.html"><i class="fas fa-heart"></i> Favorites</a>
+        <a href="Cart-Page.html"><i class="fas fa-shopping-cart"></i> Cart (<span class="cart-count">0</span>)</a>
+        <a href="Login.html"><i class="fas fa-user"></i> Login</a>
+      </div>
+    </div>
+    <div class="container px-4 py-3">
+      <div class="d-flex flex-wrap gap-3 flex-column flex-sm-row">
+        <button class="btn btn-primary flex-fill btn-dark text-white btn-custom"><a href="Home-Page.html#promotions" style="color: white; text-decoration: none;">Promotions</a></button>
+        <button class="btn btn-secondary flex-fill btn-dark text-white btn-custom"><a href="Home-Page.html#limited" style="color: white; text-decoration: none;">Limited Time Offers</a></button>
+        <button class="btn btn-secondary flex-fill btn-dark text-white btn-custom"><a href="Home-Page.html#products" style="color: white; text-decoration: none;">Best Deals of the Season</a></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Catalog Sidebar -->
+  <aside class="catalog-sidebar">
+    <h3>Categories</h3>
+    <ul id="category-list"></ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Dashboard Overview -->
+    <section class="section" id="overview">
+      <h2>Dashboard Overview</h2>
+      <div class="row g-3 dashboard-overview">
+        <div class="col-md-4">
+          <div class="card overview-card">
+            <div class="card-body text-center">
+              <h3 class="card-title">Total Products</h3>
+              <p class="card-text" id="total-products">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card overview-card">
+            <div class="card-body text-center">
+              <h3 class="card-title">Total Orders</h3>
+              <p class="card-text" id="total-orders">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card overview-card">
+            <div class="card-body text-center">
+              <h3 class="card-title">Total Revenue</h3>
+              <p class="card-text" id="total-revenue">0 ₸</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Create Product -->
+    <section class="section" id="create-product">
+      <h2>Create New Product</h2>
+      <div class="controls">
+        <button class="btn btn-primary" onclick="openModal('create')"><i class="fas fa-plus me-2"></i>Add Product</button>
+      </div>
+    </section>
+
+    <!-- Seller's Products -->
+    <section class="section" id="your-products">
+      <h2>Your Products</h2>
+      <div class="controls">
+        <div class="form-floating">
+          <input type="text" id="product-search" class="form-control" placeholder="Search products">
+          <label for="product-search">Search products</label>
+        </div>
+        <div class="form-floating">
+          <select id="product-category-filter" class="form-select">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Home">Home</option>
+            <option value="Books">Books</option>
+            <option value="Other">Other</option>
+          </select>
+          <label for="product-category-filter">Category</label>
+        </div>
+        <button class="btn btn-outline-secondary" onclick="exportProducts()"><i class="fas fa-download me-2"></i>Export</button>
+      </div>
+      <div id="product-list" class="product-list row g-3"></div>
+    </section>
+
+    <!-- Orders -->
+    <section class="section" id="orders">
+      <h2>Orders for Your Products</h2>
+      <div id="order-list" class="order-list row g-3"></div>
+    </section>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="seller-toast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body"></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Product Creation/Editing -->
+    <div class="modal fade" id="product-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="modal-title">Create Product</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="modal-error" class="alert alert-danger d-none"></div>
+            <form id="product-form">
+              <div class="mb-3">
+                <label for="modal-product-name" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="modal-product-name" required>
+              </div>
+              <div class="mb-3">
+                <label for="modal-product-price" class="form-label">Price (₸)</label>
+                <input type="number" class="form-control" id="modal-product-price" min="0" step="1" required>
+              </div>
+              <div class="mb-3">
+                <label for="modal-product-stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="modal-product-stock" min="0" step="1" required>
+              </div>
+              <div class="mb-3">
+                <label for="modal-product-category" class="form-label">Category</label>
+                <select class="form-select" id="modal-product-category" required>
+                  <option value="" disabled selected>Select a category</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Home">Home</option>
+                  <option value="Books">Books</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="modal-product-image" class="form-label">Image URL</label>
+                <input type="url" class="form-control" id="modal-product-image" placeholder="https://example.com/image.jpg">
+              </div>
+              <div class="mb-3">
+                <label for="modal-product-description" class="form-label">Description</label>
+                <textarea class="form-control" id="modal-product-description" rows="4"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" id="modal-submit">Create Product</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <div class="footer-column">
+        <h4>Products</h4>
+        <a href="Product-Page.html">Product Details</a>
+        <a href="search-results.html">Search Results</a>
+      </div>
+      <div class="footer-column">
+        <h4>Cart</h4>
+        <a href="payment-confirmation.html">Payment Confirmation</a>
+        <a href="promo-code.html">Promo Code Application</a>
+        <a href="checkout.html">Checkout</a>
+      </div>
+      <div class="footer-column">
+        <h4>Contact</h4>
+        <a href="Contact-Page.html">Contact Form</a>
+        <a href="faq.html">Frequently Asked Questions</a>
+      </div>
+      <div class="footer-column">
+        <h4>User Page</h4>
+        <a href="login.html">Login/Register</a>
+        <a href="UserPage.html">User Dashboard</a>
+        <a href="order-history.html">Order History</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Alem Market. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simulated seller ID
+    const SELLER_ID = 'seller_001';
+
+    // Initialize localStorage
+    function initializeStorage() {
+      if (!localStorage.getItem('seller_products')) {
+        localStorage.setItem('seller_products', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('orders')) {
+        localStorage.setItem('orders', JSON.stringify([]));
+      }
+    }
+
+    // Generate unique IDs
+    function generateProductId(products) {
+      const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
+      return maxId + 1;
+    }
+
+    function generateOrderId(orders) {
+      const maxId = orders.length > 0 ? Math.max(...orders.map(o => o.orderId)) : 0;
+      return maxId + 1;
+    }
+
+    // Toast notifications
+    function showToast(message, isError = false) {
+      try {
+        const toast = new bootstrap.Toast(document.getElementById('seller-toast'));
+        const toastBody = document.querySelector('#seller-toast .toast-body');
+        toastBody.textContent = message;
+        document.querySelector('#seller-toast').classList.toggle('bg-danger', isError);
+        document.querySelector('#seller-toast').classList.toggle('text-white', isError);
+        toast.show();
+      } catch (error) {
+        console.error('Error displaying toast:', error);
+        alert(message);
+      }
+    }
+
+    // Modal handling
+    function openModal(mode, product = null) {
+      const modal = new bootstrap.Modal(document.getElementById('product-modal'));
+      const form = document.getElementById('product-form');
+      const title = document.getElementById('modal-title');
+      const submitBtn = document.getElementById('modal-submit');
+      const errorMessage = document.getElementById('modal-error');
+
+      errorMessage.classList.add('d-none');
+      errorMessage.textContent = '';
+
+      if (mode === 'create') {
+        title.textContent = 'Create Product';
+        submitBtn.textContent = 'Create Product';
+        form.reset();
+        form.onsubmit = handleProductCreate;
+      } else if (mode === 'edit') {
+        title.textContent = 'Edit Product';
+        submitBtn.textContent = 'Save Changes';
+        document.getElementById('modal-product-name').value = product.name;
+        document.getElementById('modal-product-price').value = product.price;
+        document.getElementById('modal-product-stock').value = product.stock || 0;
+        document.getElementById('modal-product-description').value = product.description;
+        document.getElementById('modal-product-category').value = product.category;
+        document.getElementById('modal-product-image').value = product.image;
+        form.onsubmit = (e) => handleProductEdit(e, product.id);
+      }
+
+      modal.show();
+    }
+
+    function closeModal() {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('product-modal'));
+      modal.hide();
+    }
+
+    // Handle product creation
+    function handleProductCreate(e) {
+      e.preventDefault();
+      const errorMessage = document.getElementById('modal-error');
+      errorMessage.classList.add('d-none');
+      errorMessage.textContent = '';
+
+      const name = document.getElementById('modal-product-name').value.trim();
+      const price = parseFloat(document.getElementById('modal-product-price').value);
+      const stock = parseInt(document.getElementById('modal-product-stock').value);
+      const description = document.getElementById('modal-product-description').value.trim();
+      const category = document.getElementById('modal-product-category').value;
+      const image = document.getElementById('modal-product-image').value.trim() || 'img/placeholder.png';
+
+      if (!name || isNaN(price) || price < 0 || isNaN(stock) || stock < 0 || !category) {
+        errorMessage.textContent = 'Please fill in all required fields correctly.';
+        errorMessage.classList.remove('d-none');
+        return;
+      }
+
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const newProduct = {
+        id: generateProductId(products),
+        name,
+        price,
+        stock,
+        description: description || 'No description provided',
+        category,
+        image,
+        sellerId: SELLER_ID
+      };
+
+      products.push(newProduct);
+      localStorage.setItem('seller_products', JSON.stringify(products));
+      closeModal();
+      showToast('Product created successfully!');
+      loadSellerProducts();
+      updateDashboard();
+    }
+
+    // Handle product editing
+    function handleProductEdit(e, productId) {
+      e.preventDefault();
+      const errorMessage = document.getElementById('modal-error');
+      errorMessage.classList.add('d-none');
+      errorMessage.textContent = '';
+
+      const name = document.getElementById('modal-product-name').value.trim();
+      const price = parseFloat(document.getElementById('modal-product-price').value);
+      const stock = parseInt(document.getElementById('modal-product-stock').value);
+      const description = document.getElementById('modal-product-description').value.trim();
+      const category = document.getElementById('modal-product-category').value;
+      const image = document.getElementById('modal-product-image').value.trim() || 'img/placeholder.png';
+
+      if (!name || isNaN(price) || price < 0 || isNaN(stock) || stock < 0 || !category) {
+        errorMessage.textContent = 'Please fill in all required fields correctly.';
+        errorMessage.classList.remove('d-none');
+        return;
+      }
+
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const productIndex = products.findIndex(p => p.id === productId);
+      if (productIndex !== -1) {
+        products[productIndex] = {
+          ...products[productIndex],
+          name,
+          price,
+          stock,
+          description: description || 'No description provided',
+          category,
+          image
+        };
+        localStorage.setItem('seller_products', JSON.stringify(products));
+        closeModal();
+        showToast('Product updated successfully!');
+        loadSellerProducts();
+        updateDashboard();
+      }
+    }
+
+    // Handle product deletion
+    function deleteProduct(productId) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+        const updatedProducts = products.filter(p => p.id !== productId);
+        localStorage.setItem('seller_products', JSON.stringify(updatedProducts));
+        showToast('Product deleted successfully!');
+        loadSellerProducts();
+        updateDashboard();
+      }
+    }
+
+    // Load and display seller's products
+    async function loadSellerProducts() {
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const searchQuery = document.getElementById('product-search').value.toLowerCase();
+      const categoryFilter = document.getElementById('product-category-filter').value;
+      let sellerProducts = products.filter(p => p.sellerId === SELLER_ID);
+
+      if (searchQuery) {
+        sellerProducts = sellerProducts.filter(p => p.name.toLowerCase().includes(searchQuery));
+      }
+      if (categoryFilter) {
+        sellerProducts = sellerProducts.filter(p => p.category === categoryFilter);
+      }
+
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+
+      if (sellerProducts.length === 0) {
+        productList.innerHTML = '<p class="text-center">No products found.</p>';
+        return;
+      }
+
+      sellerProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'col-md-4 product-card';
+        card.setAttribute('data-product-id', product.id);
+        card.innerHTML = `
+          <div class="card h-100">
+            <img src="${product.image}" class="card-img-top" alt="${product.name}" loading="lazy">
+            <div class="card-body">
+              <h3 class="card-title">${product.name}</h3>
+              <p class="card-text">Price: ${product.price.toLocaleString()} ₸</p>
+              <p class="card-text">Stock: ${product.stock || 0}</p>
+              <p class="card-text">Category: ${product.category}</p>
+              <div class="actions d-flex gap-2 mt-2">
+                <button class="btn btn-primary btn-sm" onclick='openModal("edit", ${JSON.stringify(product)})'>Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', (e) => {
+          if (!e.target.closest('.actions button')) {
+            window.location.href = `Product-Page.html?id=${product.id}`;
+          }
+        });
+        productList.appendChild(card);
+      });
+    }
+
+    // Load and display orders
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const sellerProductIds = products.filter(p => p.sellerId === SELLER_ID).map(p => p.id);
+      const sellerOrders = orders.filter(o => sellerProductIds.includes(o.productId));
+      const orderList = document.getElementById('order-list');
+      orderList.innerHTML = '';
+
+      if (sellerOrders.length === 0) {
+        orderList.innerHTML = '<p class="text-center">No orders found.</p>';
+        return;
+      }
+
+      sellerOrders.forEach(order => {
+        const product = products.find(p => p.id === order.productId);
+        const card = document.createElement('div');
+        card.className = 'col-md-4 order-card';
+        card.innerHTML = `
+          <div class="card h-100">
+            <div class="card-body">
+              <h3 class="card-title">Order #${order.orderId}</h3>
+              <p class="card-text">Product: ${product ? product.name : 'Unknown'}</p>
+              <p class="card-text">Customer: ${order.customerName || 'Anonymous'}</p>
+              <p class="card-text">Price: ${product ? product.price.toLocaleString() : 'N/A'} ₸</p>
+              <p class="card-text">Date: ${new Date(order.date).toLocaleDateString()}</p>
+              <p class="card-text">Status: ${order.status || 'Pending'}</p>
+              <div class="actions d-flex gap-2 mt-2">
+                <button class="btn btn-outline-primary btn-sm" onclick="updateOrderStatus(${order.orderId}, 'Pending')">Pending</button>
+                <button class="btn btn-outline-success btn-sm" onclick="updateOrderStatus(${order.orderId}, 'Shipped')">Shipped</button>
+                <button class="btn btn-outline-info btn-sm" onclick="updateOrderStatus(${order.orderId}, 'Delivered')">Delivered</button>
+              </div>
+            </div>
+          </div>
+        `;
+        orderList.appendChild(card);
+      });
+    }
+
+    // Update order status
+    function updateOrderStatus(orderId, status) {
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const orderIndex = orders.findIndex(o => o.orderId === orderId);
+      if (orderIndex !== -1) {
+        orders[orderIndex].status = status;
+        localStorage.setItem('orders', JSON.stringify(orders));
+        showToast(`Order status updated to: ${status}`);
+        loadOrders();
+        updateDashboard();
+      }
+    }
+
+    // Update dashboard overview
+    function updateDashboard() {
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const sellerProducts = products.filter(p => p.sellerId === SELLER_ID);
+      const sellerProductIds = sellerProducts.map(p => p.id);
+      const sellerOrders = orders.filter(o => sellerProductIds.includes(o.productId));
+
+      const totalRevenue = sellerOrders.reduce((sum, order) => {
+        const product = products.find(p => p.id === order.productId);
+        return sum + (product ? product.price : 0);
+      }, 0);
+
+      document.getElementById('total-products').textContent = sellerProducts.length;
+      document.getElementById('total-orders').textContent = sellerOrders.length;
+      document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString() + ' ₸';
+    }
+
+    // Export products
+    function exportProducts() {
+      const products = JSON.parse(localStorage.getItem('seller_products') || '[]');
+      const sellerProducts = products.filter(p => p.sellerId === SELLER_ID);
+      const dataStr = JSON.stringify(sellerProducts, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'seller_products.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Products exported successfully!');
+    }
+
+    // Populate categories
+    async function populateCategories() {
+      try {
+        const response = await fetch('products.json');
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+        const products = await response.json();
+        const categories = [...new Set(products.map(p => p.category))];
+        const categoryList = document.getElementById('category-list');
+        categoryList.innerHTML = categories
+          .map(category => `<li><a href="search-results.html?category=${encodeURIComponent(category)}">${category}</a></li>`)
+          .join('');
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      }
+    }
+
+    // Update cart count
+    function updateCartCount() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElements.forEach(element => {
+          element.textContent = totalItems;
+        });
+      } catch (error) {
+        console.error('Error updating cart count:', error);
+      }
+    }
+
+    // Initialize and load data
+    initializeStorage();
+    loadSellerProducts();
+    loadOrders();
+    updateDashboard();
+    populateCategories();
+    updateCartCount();
+
+    // Event listeners
+    document.getElementById('product-search').addEventListener('input', loadSellerProducts);
+    document.getElementById('product-category-filter').addEventListener('change', loadSellerProducts);
+  </script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9398f9c6299a44cf',t:'MTc0NjIwNDE4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
